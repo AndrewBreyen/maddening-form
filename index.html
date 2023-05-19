@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maddening Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: #ff0000;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .invalid {
+            border: 1px solid #ff0000 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Maddening Form</h1>
+        <form id="maddening-form" onsubmit="event.preventDefault(); validateForm();">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" required pattern=".{100,}" title="Please enter at least 100 characters, including emojis and special characters.">
+                <div class="error-message">Please enter your full name using at least 100 characters, including emojis and special characters.</div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required pattern="([a-zA-Z0-9]+\.)*[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}" title="Please provide an email address that contains at least 5 dots and a random assortment of numbers and letters.">
+                <div class="error-message">Please provide an email address that contains at least 5 dots and a random assortment of numbers and letters.</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required pattern="(?=.*[A-Z]){50,}(?=.*[a-z]){25,}(?=.*\d){10,}(?=.*[@#$%^&+=*]).{5,}" title="Password must be a combination of at least 50 uppercase letters, 25 lowercase letters, 10 digits, and 5 special characters. Don't forget to include emojis too!">
+                <div class="error-message">Password must be a combination of at least 50 uppercase letters, 25 lowercase letters, 10 digits, and 5 special characters. Don't forget to include emojis too!</div>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="range" id="age" min="0" max="120" step="1" required oninput="validateAge()">
+                <div class="error-message">Please slide the age bar to an age that is divisible by 3 and ends with a prime number.</div>
+            </div>
+            <div class="form-group">
+                <label for="country">Country of Residence:</label>
+                <select id="country" required onchange="validateCountry()">
+                    <option value="">Select Country</option>
+                    <option value="mars">Mars</option>
+                    <option value="atlantis">Atlantis</option>
+                    <option value="narnia">Narnia</option>
+                    <option value="middle-earth">Middle-earth</option>
+                </select>
+                <div class="error-message">Please choose a non-existent country. Bonus frustration points if it starts with the same letter as your first name.</div>
+            </div>
+            <div class="form-group">
+                <label for="occupation">Occupation:</label>
+                <input type="text" id="occupation" required pattern="[^\x00-\x7F]+" title="Please enter your current job title using an ancient language that is no longer in use.">
+                <div class="error-message">Please enter your current job title using an ancient language that is no longer in use.</div>
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" rows="5" required pattern="(?=(?:\D*\d){500,})(?=(.*(.)(.)\3\2){1}).{1,}" title="Please provide a message that consists of at least 500 words and includes a palindrome sentence."></textarea>
+                <div class="error-message">Please provide a message that consists of at least 500 words and includes a palindrome sentence.</div>
+            </div>
+            <div class="form-group">
+                <label for="agree">
+                    <input type="checkbox" id="agree" required onclick="validateAgreement()">
+                    I acknowledge that this form is designed to infuriate users.
+                </label>
+                <div class="error-message">You must agree to our terms and conditions, which can only be deciphered through a cryptic riddle hidden in the source code.</div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function validateAge() {
+            var age = document.getElementById('age').value;
+            if (age % 3 !== 0 || !isPrime(age % 10)) {
+                showError('age');
+            } else {
+                hideError('age');
+            }
+        }
+
+        function validateCountry() {
+            var country = document.getElementById('country').value;
+            var firstName = document.getElementById('name').value.split(' ')[0];
+            if (country.substring(0, 1).toLowerCase() !== firstName.substring(0, 1).toLowerCase()) {
+                showError('country');
+            } else {
+                hideError('country');
+            }
+        }
+
+        function validateAgreement() {
+            var agreement = document.getElementById('agree').checked;
+            if (!agreement) {
+                showError('agree');
+            } else {
+                hideError('agree');
+            }
+        }
+
+        function showError(elementId) {
+            document.getElementById(elementId).classList.add('invalid');
+            document.querySelector(`#${elementId} ~ .error-message`).style.display = 'block';
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.remove('invalid');
+            document.querySelector(`#${elementId} ~ .error-message`).style.display = 'none';
+        }
+
+        function isPrime(number) {
+            if (number < 2) return false;
+            for (var i = 2; i <= Math.sqrt(number); i++) {
+                if (number % i === 0) return false;
+            }
+            return true;
+        }
+
+        function validateForm() {
+            var form = document.getElementById('maddening-form');
+            if (form.checkValidity()) {
+                // Form submitted successfully, redirect to Rickroll video
+                window.location.href = 'https://www.youtube.com/watch?v=xvFZjo5PgG0';
+            } else {
+                form.reportValidity();
+            }
+        }
+    </script>
+</body>
+</html>
